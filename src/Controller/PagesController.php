@@ -23,43 +23,43 @@ class PagesController extends AbstractController
         $digits = $request->query->getBoolean('digits');
         $specialCharacters = $request->query->getBoolean('special_characters');
 
-        $lowercaseLettersSet = range('a', 'z');
-        $uppercaseLettersSet = range('A', 'Z');
-        $digitsSet = range(0, 9);
-        $specialCharactersSet = ['!', '#', '$', '%', '&', '(', ')', '*', '+', ',', '-', '.', '/', '=', '?', '@', '[', ']', '^', '_', '`', '{', '|', '}', '~'];
+        $lowercaseLettersAlphabet = range('a', 'z');
+        $uppercaseLettersAlphabet = range('A', 'Z');
+        $digitsAlphabet = range(0, 9);
+        $specialCharactersAlphabet = ['!', '#', '$', '%', '&', '(', ')', '*', '+', ',', '-', '.', '/', '=', '?', '@', '[', ']', '^', '_', '`', '{', '|', '}', '~'];
 
-        $characters = $lowercaseLettersSet;
+        $finalAphabet = $lowercaseLettersAlphabet;
 
         $password = '';
 
         // On rajoute une lettre en miniscule choisie de manière aléatoire
-        $password .= $lowercaseLettersSet[random_int(0, count($lowercaseLettersSet) - 1)];
+        $password .= $this->pickRandomItemFromAlphabet($lowercaseLettersAlphabet);
 
         if ($uppercaseLetters) {
-            $characters = array_merge($characters, $uppercaseLettersSet);
+            $finalAphabet = array_merge($finalAphabet, $uppercaseLettersAlphabet);
 
             // On rajoute une lettre en majuscule choisie de manière aléatoire
-            $password .= $uppercaseLettersSet[random_int(0, count($uppercaseLettersSet) - 1)];
+            $password .= $this->pickRandomItemFromAlphabet($uppercaseLettersAlphabet);
         }
 
         if ($digits) {
-            $characters = array_merge($characters, $digitsSet);
+            $finalAphabet = array_merge($finalAphabet, $digitsAlphabet);
 
             // On rajoute un chiffre choisi de manière aléatoire
-            $password .= $digitsSet[random_int(0, count($digitsSet) - 1)];
+            $password .= $this->pickRandomItemFromAlphabet($digitsAlphabet);
         }
 
         if ($specialCharacters) {
-            $characters = array_merge($characters, $specialCharactersSet);
+            $finalAphabet = array_merge($finalAphabet, $specialCharactersAlphabet);
 
             // On rajoute un caractère spécial choisi de manière aléatoire
-            $password .= $specialCharactersSet[random_int(0, count($specialCharactersSet) - 1)];
+            $password .= $this->pickRandomItemFromAlphabet($specialCharactersAlphabet);
         }
 
         $numberOfCharactersRemaining = $length - mb_strlen($password);
 
         for ($i = 0; $i < $numberOfCharactersRemaining; $i++) { 
-            $password .= $characters[random_int(0, count($characters) - 1)];
+            $password .= $this->pickRandomItemFromAlphabet($finalAphabet);
         }
 
         $password = str_split($password);
@@ -84,5 +84,10 @@ class PagesController extends AbstractController
         }
 
         return $arr;
+    }
+
+    private function pickRandomItemFromAlphabet(array $alphabet): string
+    {
+        return $alphabet[random_int(0, count($alphabet) - 1)];
     }
 }
