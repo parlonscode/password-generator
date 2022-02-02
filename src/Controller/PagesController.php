@@ -26,43 +26,44 @@ class PagesController extends AbstractController
         $lowercaseLettersAlphabet = range('a', 'z');
         $uppercaseLettersAlphabet = range('A', 'Z');
         $digitsAlphabet = range(0, 9);
-        $specialCharactersAlphabet = ['!', '#', '$', '%', '&', '(', ')', '*', '+', ',', '-', '.', '/', '=', '?', '@', '[', ']', '^', '_', '`', '{', '|', '}', '~'];
+        $specialCharactersAlphabet = array_merge(
+            range('!', '/'),
+            range(':', '@'),
+            range('[', '`'),
+            range('{', '~'),
+        );
 
         $finalAphabet = $lowercaseLettersAlphabet;
 
-        $password = '';
-
         // On rajoute une lettre en miniscule choisie de manière aléatoire
-        $password .= $this->pickRandomItemFromAlphabet($lowercaseLettersAlphabet);
+        $password = [$this->pickRandomItemFromAlphabet($lowercaseLettersAlphabet)];
 
         if ($uppercaseLetters) {
             $finalAphabet = array_merge($finalAphabet, $uppercaseLettersAlphabet);
 
             // On rajoute une lettre en majuscule choisie de manière aléatoire
-            $password .= $this->pickRandomItemFromAlphabet($uppercaseLettersAlphabet);
+            $password[] = $this->pickRandomItemFromAlphabet($uppercaseLettersAlphabet);
         }
 
         if ($digits) {
             $finalAphabet = array_merge($finalAphabet, $digitsAlphabet);
 
             // On rajoute un chiffre choisi de manière aléatoire
-            $password .= $this->pickRandomItemFromAlphabet($digitsAlphabet);
+            $password[] = $this->pickRandomItemFromAlphabet($digitsAlphabet);
         }
 
         if ($specialCharacters) {
             $finalAphabet = array_merge($finalAphabet, $specialCharactersAlphabet);
 
             // On rajoute un caractère spécial choisi de manière aléatoire
-            $password .= $this->pickRandomItemFromAlphabet($specialCharactersAlphabet);
+            $password[] = $this->pickRandomItemFromAlphabet($specialCharactersAlphabet);
         }
 
-        $numberOfCharactersRemaining = $length - mb_strlen($password);
+        $numberOfCharactersRemaining = $length - count($password);
 
         for ($i = 0; $i < $numberOfCharactersRemaining; $i++) { 
-            $password .= $this->pickRandomItemFromAlphabet($finalAphabet);
+            $password[] = $this->pickRandomItemFromAlphabet($finalAphabet);
         }
-
-        $password = str_split($password);
 
         $password = $this->secureShuffle($password);
 
