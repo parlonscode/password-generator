@@ -17,10 +17,8 @@ class PagesController extends AbstractController
     }
 
     #[Route('/generate-password', name: 'app_generate_password')]
-    public function generatePassword(Request $request): Response
+    public function generatePassword(Request $request, PasswordGenerator $passwordGenerator): Response
     {
-        $passwordGenerator = new PasswordGenerator;
-
         $password = $passwordGenerator->generate(
             $request->query->getInt('length'),
             $request->query->getBoolean('uppercase_letters'),
