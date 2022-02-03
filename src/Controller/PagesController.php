@@ -23,8 +23,8 @@ class PagesController extends AbstractController
 
         $password = $passwordGenerator->generate(
             $request->query->getInt('length'),
-            $request->query->getBoolean('digits'),
             $request->query->getBoolean('uppercase_letters'),
+            $request->query->getBoolean('digits'),
             $request->query->getBoolean('special_characters'),
         );
 
