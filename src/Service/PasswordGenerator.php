@@ -16,7 +16,7 @@ class PasswordGenerator
             range('{', '~'),
         );
 
-        $finalAphabet = $lowercaseLettersAlphabet;
+        $finalAlphabet = [$lowercaseLettersAlphabet];
 
         // On rajoute une lettre en miniscule choisie de manière aléatoire
         $password = [$this->pickRandomItemFromAlphabet($lowercaseLettersAlphabet)];
@@ -29,16 +29,18 @@ class PasswordGenerator
 
         foreach ($constraintMapping as [$constraintEnabled, $constraintAlphabet]) {
             if ($constraintEnabled) {
-                $finalAphabet = array_merge($finalAphabet, $constraintAlphabet);
+                $finalAlphabet[] = $constraintAlphabet;
 
                 $password[] = $this->pickRandomItemFromAlphabet($constraintAlphabet);
             }
         }
 
+        $finalAlphabet = array_merge(...$finalAlphabet);
+
         $numberOfCharactersRemaining = $length - count($password);
 
         for ($i = 0; $i < $numberOfCharactersRemaining; $i++) { 
-            $password[] = $this->pickRandomItemFromAlphabet($finalAphabet);
+            $password[] = $this->pickRandomItemFromAlphabet($finalAlphabet);
         }
 
         $password = $this->secureShuffle($password);
