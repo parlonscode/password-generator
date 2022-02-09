@@ -20,7 +20,7 @@ class PagesController extends AbstractController
     public function generatePassword(Request $request, PasswordGenerator $passwordGenerator): Response
     {
         $password = $passwordGenerator->generate(
-            $request->query->getInt('length'),
+            max(min($request->query->getInt('length'), 60), 8),
             $request->query->getBoolean('uppercase_letters'),
             $request->query->getBoolean('digits'),
             $request->query->getBoolean('special_characters'),
