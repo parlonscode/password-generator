@@ -1,12 +1,8 @@
 {% extends 'base.html.twig' %}
 
 {% block body %}
-    <h1>Password Generator</h1>
-
-    <form
-        id="js-password-generator-form"
-        method="get"
-        action="{{ path('app_generate_password') }}" 
+    <div
+        x-cloak
         x-data="{
             length: $persist({{ password_default_length }}),
             uppercaseLetters: $persist(false),
@@ -14,61 +10,69 @@
             specialCharacters: $persist(false)
         }"
     >
-        <div>
-            <label for="length">Length</label>
-            <select id="length" name="length" x-model="length">
-                {% for i in password_min_length..password_max_length %}
-                    <option 
-                        value="{{ i }}"
-                        {# {{ i == password_default_length ? 'selected' }} #}
-                    >
-                        {{ i }}
-                    </option>
-                {% endfor %}
-            </select>
-        </div>
+        <h1>Password Generator</h1>
 
-        <div>
-            <label for="uppercase-letters">Uppercase Letters</label>
-            <input 
-                type="checkbox"
-                id="uppercase-letters"
-                name="uppercase_letters"
-                x-model="uppercaseLetters"
-            >
-        </div>
+        <form
+            id="js-password-generator-form"
+            method="get"
+            action="{{ path('app_generate_password') }}"
+        >
+            <div>
+                <label for="length">Length</label>
+                <select id="length" name="length" x-model="length">
+                    {% for i in password_min_length..password_max_length %}
+                        <option 
+                            value="{{ i }}"
+                            {# {{ i == password_default_length ? 'selected' }} #}
+                        >
+                            {{ i }}
+                        </option>
+                    {% endfor %}
+                </select>
+            </div>
 
-        <div>
-            <label for="digits">Digits</label>
-            <input
-                type="checkbox"
-                id="digits"
-                name="digits"
-                x-model="digits"
-            >
-        </div>
+            <div>
+                <label for="uppercase-letters">Uppercase Letters</label>
+                <input 
+                    type="checkbox"
+                    id="uppercase-letters"
+                    name="uppercase_letters"
+                    x-model="uppercaseLetters"
+                >
+            </div>
 
-        <div>
-            <label for="special-characters">Special Characters</label>
-            <input
-                type="checkbox"
-                id="special-characters"
-                name="special_characters"
-                x-model="specialCharacters"
-            >
-        </div>
+            <div>
+                <label for="digits">Digits</label>
+                <input
+                    type="checkbox"
+                    id="digits"
+                    name="digits"
+                    x-model="digits"
+                >
+            </div>
 
-        <div>
-            <button type="submit">Generate Password</button>
-        </div>
-    </form>
+            <div>
+                <label for="special-characters">Special Characters</label>
+                <input
+                    type="checkbox"
+                    id="special-characters"
+                    name="special_characters"
+                    x-model="specialCharacters"
+                >
+            </div>
 
-    <footer>
-        <p>
-            Built with &hearts; by 
-            <a href="https://parlonscode.com">Parlons Code</a>.
-        </p>
-    </footer>
+            <div>
+                <button type="submit">Generate Password</button>
+            </div>
+        </form>
+        
+        <footer>
+            <p>
+                Built with &hearts; by 
+                <a href="https://parlonscode.com">Parlons Code</a>.
+            </p>
+        </footer>
+    </div>
 {% endblock %}
 
 {% block javascripts %}
