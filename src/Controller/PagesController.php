@@ -45,7 +45,9 @@ class PagesController extends AbstractController
 
         $response = $this->render('pages/password.html.twig', compact('password'));
 
-        $this->setPasswordPreferencesAsCookies($response, $length, $uppercaseLetters, $digits, $specialCharacters);
+        $this->setPasswordPreferencesAsCookies(
+            $response, $length, $uppercaseLetters, $digits, $specialCharacters
+        );
 
         return $response;
     }
