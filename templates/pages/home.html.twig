@@ -8,7 +8,7 @@
             </h1>
         </div>
         <div class="card-body">
-            {% set length_to_select = app.request.cookies.get('app_length', password_default_length) %}
+            {% set length_to_select = app.request.cookies.getInt('app_length', password_default_length) %}
 
             <form method="get" action="{{ path('app_generate_password') }}">
                 <div class="row">
@@ -35,7 +35,7 @@
                                 id="uppercase-letters"
                                 name="uppercase_letters"
                                 class="form-check-input"
-                                {{ app.request.cookies.get('app_uppercase_letters') ? 'checked' }}
+                                {{ app.request.cookies.getBoolean('app_uppercase_letters') ? 'checked' }}
                             >
                             <label for="uppercase-letters" class="form-check-label">Uppercase Letters</label>
                         </div>
@@ -46,7 +46,7 @@
                                 id="digits"
                                 name="digits"
                                 class="form-check-input"
-                                {{ app.request.cookies.get('app_digits') ? 'checked' }}
+                                {{ app.request.cookies.getBoolean('app_digits') ? 'checked' }}
                             >
                             <label for="digits" class="form-check-label">Digits</label>
                         </div>
@@ -57,7 +57,7 @@
                                 id="special-characters"
                                 name="special_characters"
                                 class="form-check-input"
-                                {{ app.request.cookies.get('app_special_characters') ? 'checked' }}
+                                {{ app.request.cookies.getBoolean('app_special_characters') ? 'checked' }}
                             >
                             <label for="special-characters" class="form-check-label">Special Characters</label>
                         </div>
