@@ -13,13 +13,10 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 class PagesController extends AbstractController
 {
     #[Route('/', name: 'app_home')]
-    public function home(Request $request): Response
+    public function home(): Response
     {
         return $this->render('pages/home.html.twig', [
-            'password_default_length' => $request->cookies->getInt('app_length', $this->getParameter('app.password_default_length')),
-            'uppercase_letters' => $request->cookies->getBoolean('app_uppercase_letters'),
-            'digits' => $request->cookies->getBoolean('app_digits'),
-            'special_characters' => $request->cookies->getBoolean('app_special_characters'),
+            'password_default_length' => $this->getParameter('app.password_default_length'),
             'password_min_length' => $this->getParameter('app.password_min_length'),
             'password_max_length' => $this->getParameter('app.password_max_length')
         ]);
@@ -48,22 +45,29 @@ class PagesController extends AbstractController
 
         $response = $this->render('pages/password.html.twig', compact('password'));
 
-        $response->headers->setCookie(
-            new Cookie('app_length', $length, new DateTimeImmutable('+5 years'))
-        );
-
-        $response->headers->setCookie(
-            new Cookie('app_uppercase_letters', $uppercaseLetters ? '1' : '0', new DateTimeImmutable('+5 years'))
-        );
-
-        $response->headers->setCookie(
-            new Cookie('app_digits', $digits ? '1' : '0', new DateTimeImmutable('+5 years'))
-        );
-
-        $response->headers->setCookie(
-            new Cookie('app_special_characters', $specialCharacters ? '1' : '0', new DateTimeImmutable('+5 years'))
-        );
+        $this->setPasswordPreferencesAsCookies($response, $length, $uppercaseLetters, $digits, $specialCharacters);
 
         return $response;
+    }
+
+    private function setPasswordPreferencesAsCookies(Response $response, int $length, bool $uppercaseLetters, bool $digits, bool $specialCharacters): void
+    {
+        $fiveYearsFromNow = new DateTimeImmutable('+5 years');
+
+        $response->headers->setCookie(
+            new Cookie('app_length', $length, $fiveYearsFromNow)
+        );
+
+        $response->headers->setCookie(
+            new Cookie('app_uppercase_letters', $uppercaseLetters ? '1' : '0', $fiveYearsFromNow)
+        );
+
+        $response->headers->setCookie(
+            new Cookie('app_digits', $digits ? '1' : '0', $fiveYearsFromNow)
+        );
+
+        $response->headers->setCookie(
+            new Cookie('app_special_characters', $specialCharacters ? '1' : '0', $fiveYearsFromNow)
+        );
     }
 }
