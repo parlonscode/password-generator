@@ -1,11 +1,12 @@
  ✔ 1. homepage should work: Password Generator @done (22-03-09 17:26)
- ☐ 2. generated password page should work: Generated Password
+ ✔ 2. generated password page should work: Generated Password @done (22-03-09 17:41)
  ☐ 3. test password generation form
  ☐ 4. test what happens if length < 8 et > 60
- ☐ 5. first time homepage no cookies
- ☐ 6. cookies set when submitting form for the first time
+ ☐ 5. first time homepage no cookies xxx
+ ☐ 6. cookies set when submitting form for the first time xxx
  ☐ 7. form is prepopulated with cookies values
  ☐ 8. test password validity based on constraints
 
 tests unitaires (unité) PHPUnit
 tests d'application (workflow requete-réponse)
+montrer @test
