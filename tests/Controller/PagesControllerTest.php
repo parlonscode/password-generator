@@ -103,4 +103,30 @@ class PagesControllerTest extends WebTestCase
         $this->assertCheckboxChecked('digits');
         $this->assertCheckboxChecked('special_characters');
     }
+
+    /** @test */
+    public function password_min_length_should_be_8(): void
+    {
+        $client = static::createClient();
+
+        $crawler = $client->request('GET', '/generate-password?length=2');
+
+        $this->assertRouteSame('app_generate_password');
+        $this->assertSame(
+            8, mb_strlen($crawler->filter('.alert.alert-success > strong')->text())
+        );
+    }
+
+    /** @test */
+    public function password_max_length_should_be_60(): void
+    {
+        $client = static::createClient();
+
+        $crawler = $client->request('GET', '/generate-password?length=100');
+
+        $this->assertRouteSame('app_generate_password');
+        $this->assertSame(
+            60, mb_strlen($crawler->filter('.alert.alert-success > strong')->text())
+        );
+    }
 }

@@ -1,8 +1,8 @@
  ✔ 1. homepage should work: Password Generator @done (22-03-09 17:26)
  ✔ 2. generated password page should work: Generated Password @done (22-03-09 17:41)
- ☐ 3. test password generation form
- ☐ 4. test what happens if length < 8 et > 60
- ☐ 5. form is prepopulated with cookies values
+ ✔ 3. test password generation form @done (22-03-10 17:40)
+ ✔ 4. test what happens if length < 8 et > 60 @done (22-03-10 17:42)
+ ✔ 5. form is prepopulated with cookies values @done (22-03-10 17:40)
  ✔ 6. first time homepage no cookies @done (22-03-09 17:55)
  ✔ 7. cookies set when submitting form for the first time @done (22-03-09 17:55)
  ☐ 8. test password validity based on constraints
