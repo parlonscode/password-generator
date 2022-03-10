@@ -7,5 +7,3 @@
  ✔ 7. cookies set when submitting form for the first time @done (22-03-09 17:55)
  ☐ 8. test password validity based on constraints
 
-tests unitaires (unité) PHPUnit
-tests d'application (workflow requete-réponse)
