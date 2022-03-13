@@ -12,20 +12,18 @@
 
             <form method="get" action="{{ path('app_generate_password') }}">
                 <div class="row">
-                    <div class="col-md-6">
-                        <div class="mb-3">
-                            <label for="length" class="form-label">Length</label>
-                            <select id="length" name="length" class="form-select w-75">
-                                {% for i in password_min_length..password_max_length %}
-                                    <option 
-                                        value="{{ i }}"
-                                        {{ i == length_to_select ? 'selected' }}
-                                    >
-                                        {{ i }}
-                                    </option>
-                                {% endfor %}
-                            </select>
-                        </div>
+                    <div class="col-md-6 mb-3">
+                        <label for="length" class="form-label">Length</label>
+                        <select id="length" name="length" class="form-select w-75">
+                            {% for i in password_min_length..password_max_length %}
+                                <option 
+                                    value="{{ i }}"
+                                    {{ i == length_to_select ? 'selected' }}
+                                >
+                                    {{ i }}
+                                </option>
+                            {% endfor %}
+                        </select>
                     </div>
 
                     <div class="col-md-6">
