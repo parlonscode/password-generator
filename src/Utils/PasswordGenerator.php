@@ -2,6 +2,7 @@
 
 namespace App\Utils;
 
+use App\Model\PasswordRequirements;
 use Random\Randomizer;
 
 class PasswordGenerator
@@ -57,6 +58,16 @@ class PasswordGenerator
         # We do a shuffle at the end to make the order 
         # of the final password characters unpredictable
         return $randomizer->shuffleBytes($password);
+    }
+
+    public static function fromPasswordRequirements(PasswordRequirements $passwordRequirements): string
+    {
+        return self::generate(
+            $passwordRequirements->getLength(),
+            $passwordRequirements->getUppercaseLetters(),
+            $passwordRequirements->getDigits(),
+            $passwordRequirements->getSpecialCharacters()
+        );
     }
 
     private static function randomItemFromAlphabet(array $alphabet, Randomizer $randomizer): string

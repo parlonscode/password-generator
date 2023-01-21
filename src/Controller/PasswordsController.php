@@ -2,9 +2,9 @@
 
 namespace App\Controller;
 
-use App\Form\PasswordType;
+use App\Form\PasswordRequirementsType;
+use App\Model\PasswordRequirements;
 use DateTimeImmutable;
-use App\Utils\RangeLimiter;
 use App\Utils\PasswordGenerator;
 use Symfony\Component\HttpFoundation\Cookie;
 use Symfony\Component\HttpFoundation\Request;
@@ -17,70 +17,59 @@ class PasswordsController extends AbstractController
     #[Route('/', name: 'app_home', methods: ['GET', 'POST'])]
     public function create(Request $request): Response
     {
-        $form = $this->createForm(PasswordType::class, [
-            'length' => $request->cookies->getInt(
-                'app_length', $this->getParameter('app.password_default_length')
-            ),
-            'uppercaseLetters' => $request->cookies->getBoolean('app_uppercase_letters', false),
-            'digits' => $request->cookies->getBoolean('app_digits', false),
-            'specialCharacters' => $request->cookies->getBoolean('app_length', false),
-        ]);
+        $form = $this->createForm(PasswordRequirementsType::class);
 
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            dd($form->getData());
+            $passwordRequirements = $form->getData();
+
+            $request->getSession()->set('app_password_requirements', $passwordRequirements);
+    
+            return $this->redirectToRoute('app_passwords_show');
         }
 
         return $this->render('passwords/create.html.twig', compact('form'));
     }
 
-    #[Route('/generate-password', name: 'app_generate_password', methods: ['POST'])]
-    public function generatePassword(Request $request): Response
+    #[Route('/password-generated', name: 'app_passwords_show', methods: ['GET'])]
+    public function show(Request $request): Response
     {
-        $length = RangeLimiter::clamp(
-            $request->query->getInt('length'),
-            $this->getParameter('app.password_min_length'),
-            $this->getParameter('app.password_max_length')
-        );
-        $uppercaseLetters = $request->query->getBoolean('uppercase_letters');
-        $digits = $request->query->getBoolean('digits');
-        $specialCharacters = $request->query->getBoolean('special_characters');
+        $passwordRequirements = $request->getSession()->get('app_password_requirements');
 
-        $password = PasswordGenerator::generate(
-            $length,
-            $uppercaseLetters,
-            $digits,
-            $specialCharacters,
-        );
+        if (!$passwordRequirements) {
+            return $this->redirectToRoute('app_home');
+        }
 
-        $response = $this->render('pages/password.html.twig', compact('password'));
+        $password = PasswordGenerator::fromPasswordRequirements($passwordRequirements);
 
-        $this->saveUserPasswordRequirements(
-            $response, $length, $uppercaseLetters, $digits, $specialCharacters
-        );
+        $response = $this->render('passwords/show.html.twig', compact('password'));
 
+        $this->savePasswordRequirements($response, $passwordRequirements);
+    
         return $response;
     }
 
-    private function saveUserPasswordRequirements(Response $response, int $length, bool $uppercaseLetters, bool $digits, bool $specialCharacters): void
+    private function savePasswordRequirements(
+        Response $response, PasswordRequirements $passwordRequirements
+    ): void
     {
         $fiveYearsFromNow = new DateTimeImmutable('+5 years');
 
         $response->headers->setCookie(
-            new Cookie('app_length', $length, $fiveYearsFromNow)
+            new Cookie('app_length', $passwordRequirements->getLength(), $fiveYearsFromNow)
         );
 
         $response->headers->setCookie(
-            new Cookie('app_uppercase_letters', $uppercaseLetters ? '1' : '0', $fiveYearsFromNow)
+            new Cookie('app_uppercase_letters', $passwordRequirements->getUppercaseLetters() ? '1' : '0', $fiveYearsFromNow)
         );
 
         $response->headers->setCookie(
-            new Cookie('app_digits', $digits ? '1' : '0', $fiveYearsFromNow)
+            new Cookie('app_digits', $passwordRequirements->getDigits() ? '1' : '0', $fiveYearsFromNow)
         );
 
         $response->headers->setCookie(
-            new Cookie('app_special_characters', $specialCharacters ? '1' : '0', $fiveYearsFromNow)
+            new Cookie('app_special_characters', $passwordRequirements->getSpecialCharacters() ? '1' : '0', $fiveYearsFromNow)
         );
     }
 }
