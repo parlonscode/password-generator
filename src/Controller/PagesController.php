@@ -3,6 +3,7 @@
 namespace App\Controller;
 
 use DateTimeImmutable;
+use App\Utils\RangeLimiter;
 use App\Service\PasswordGenerator;
 use Symfony\Component\HttpFoundation\Cookie;
 use Symfony\Component\HttpFoundation\Request;
@@ -25,7 +26,7 @@ class PagesController extends AbstractController
     #[Route('/generate-password', name: 'app_generate_password', methods: ['GET'])]
     public function generatePassword(Request $request, PasswordGenerator $passwordGenerator): Response
     {
-        $length = clamp(
+        $length = RangeLimiter::clamp(
             $request->query->getInt('length'),
             $this->getParameter('app.password_min_length'),
             $this->getParameter('app.password_max_length')
