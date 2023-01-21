@@ -42,34 +42,40 @@ class PasswordsControllerTest extends WebTestCase
         $this->assertBrowserNotHasCookie('app_special_characters');
     }
 
-    // /** @test */
-    // public function cookies_are_set_when_generating_new_password(): void
-    // {
-    //     $client = static::createClient();
+    /** @test */
+    public function cookies_are_set_when_generating_new_password(): void
+    {
+        $client = static::createClient();
 
-    //     $client->request('POST', '/');
+        $client->request('GET', '/');
+
+        $client->submitForm('Generate Password');
+
+        $client->followRedirect();
         
-    //     $this->assertBrowserHasCookie('app_length');
-    //     $this->assertBrowserHasCookie('app_uppercase_letters');
-    //     $this->assertBrowserHasCookie('app_digits');
-    //     $this->assertBrowserHasCookie('app_special_characters');
-    // }
+        $this->assertBrowserHasCookie('app_length');
+        $this->assertBrowserHasCookie('app_uppercase_letters');
+        $this->assertBrowserHasCookie('app_digits');
+        $this->assertBrowserHasCookie('app_special_characters');
+    }
 
-    // /** @test */
-    // public function password_generation_form_should_work(): void
-    // {
-    //     $client = static::createClient();
+    /** @test */
+    public function password_generation_form_should_work(): void
+    {
+        $client = static::createClient();
 
-    //     $client->request('GET', '/');
+        $client->request('GET', '/');
 
-    //     $crawler = $client->submitForm('Generate Password', []);
+        $client->submitForm('Generate Password');
 
-    //     $this->assertRouteSame('app_passwords_show');
-    //     $this->assertSame(12, mb_strlen($crawler->filter('.alert.alert-success > strong')->text()));
+        $crawler = $client->followRedirect();
 
-    //     $client->clickLink('« Go back to the homepage');
-    //     $this->assertRouteSame('app_home');
-    // }
+        $this->assertRouteSame('app_passwords_show');
+        $this->assertSame(12, mb_strlen($crawler->filter('.alert.alert-success > strong')->text()));
+
+        $client->clickLink('« Go back to the homepage');
+        $this->assertRouteSame('app_home');
+    }
 
     /** @test */
     public function password_generation_form_with_values_should_work(): void
@@ -105,29 +111,31 @@ class PasswordsControllerTest extends WebTestCase
         $this->assertCheckboxChecked('password_requirements[special_characters]');
     }
 
-    // /** @test */
-    // public function password_min_length_should_be_8(): void
-    // {
-    //     $client = static::createClient();
+    /** @test */
+    public function password_min_length_should_be_8(): void
+    {
+        $client = static::createClient();
 
-    //     $crawler = $client->request('GET', '/generate-password?length=2');
+        $client->request('GET', '/');
 
-    //     $this->assertRouteSame('app_passwords_show');
-    //     $this->assertSame(
-    //         8, mb_strlen($crawler->filter('.alert.alert-success > strong')->text())
-    //     );
-    // }
+        $this->expectException(\InvalidArgumentException::class);
 
-    // /** @test */
-    // public function password_max_length_should_be_60(): void
-    // {
-    //     $client = static::createClient();
+        $client->submitForm('Generate Password', [
+            'password_requirements[length]' => 2
+        ]);
+    }
 
-    //     $crawler = $client->request('GET', '/generate-password?length=100');
+    /** @test */
+    public function password_max_length_should_be_60(): void
+    {
+        $client = static::createClient();
 
-    //     $this->assertRouteSame('app_passwords_show');
-    //     $this->assertSame(
-    //         60, mb_strlen($crawler->filter('.alert.alert-success > strong')->text())
-    //     );
-    // }
+        $client->request('GET', '/');
+
+        $this->expectException(\InvalidArgumentException::class);
+        
+        $client->submitForm('Generate Password', [
+            'password_requirements[length]' => 100
+        ]);
+    }
 }
