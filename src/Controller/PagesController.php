@@ -23,7 +23,7 @@ class PagesController extends AbstractController
         ]);
     }
 
-    #[Route('/generate-password', name: 'app_generate_password', methods: ['GET'])]
+    #[Route('/generate-password', name: 'app_generate_password', methods: ['POST'])]
     public function generatePassword(Request $request): Response
     {
         $length = RangeLimiter::clamp(
