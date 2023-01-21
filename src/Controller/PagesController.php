@@ -44,14 +44,14 @@ class PagesController extends AbstractController
 
         $response = $this->render('pages/password.html.twig', compact('password'));
 
-        $this->setPasswordPreferencesAsCookies(
+        $this->saveUserPasswordRequirements(
             $response, $length, $uppercaseLetters, $digits, $specialCharacters
         );
 
         return $response;
     }
 
-    private function setPasswordPreferencesAsCookies(Response $response, int $length, bool $uppercaseLetters, bool $digits, bool $specialCharacters): void
+    private function saveUserPasswordRequirements(Response $response, int $length, bool $uppercaseLetters, bool $digits, bool $specialCharacters): void
     {
         $fiveYearsFromNow = new DateTimeImmutable('+5 years');
 
