@@ -17,28 +17,24 @@ class PasswordType extends AbstractType
 
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
-        // $passwordLengthRange = range(
-        //     $this->parameterBag->get('app.password_min_length'),
-        //     $this->parameterBag->get('app.password_max_length')
-        // );
-
         $builder
             ->add('length', ChoiceType::class, [
-                // 'choices' => array_combine($passwordLengthRange, $passwordLengthRange),
                 'choices' => range(
                     $this->parameterBag->get('app.password_min_length'),
                     $this->parameterBag->get('app.password_max_length')
                 ),
-                'choice_label' => function ($value) {
-                    return $value;
-                },
+                'choice_label' => fn ($value) => $value,
             ])
             ->add('uppercaseLetters', CheckboxType::class, [
-                'label' => 'Uppercase Letters'
+                'label' => 'Uppercase Letters',
+                'required' => false
             ])
-            ->add('digits', CheckboxType::class)
+            ->add('digits', CheckboxType::class, [
+                'required' => false
+            ])
             ->add('specialCharacters', CheckboxType::class, [
-                'label' => 'Special Characters'
+                'label' => 'Special Characters',
+                'required' => false
             ])
         ;
     }

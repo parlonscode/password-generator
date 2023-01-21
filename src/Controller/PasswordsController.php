@@ -23,7 +23,7 @@ class PasswordsController extends AbstractController
             ),
             'uppercaseLetters' => $request->cookies->getBoolean('app_uppercase_letters', false),
             'digits' => $request->cookies->getBoolean('app_digits', false),
-            'app_special_characters' => $request->cookies->getBoolean('app_length', false),
+            'specialCharacters' => $request->cookies->getBoolean('app_length', false),
         ]);
 
         $form->handleRequest($request);
