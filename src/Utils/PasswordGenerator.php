@@ -1,25 +1,20 @@
 <?php
 
-namespace App\Service;
+namespace App\Utils;
 
 use Random\Randomizer;
 
 class PasswordGenerator
 {
-    private readonly Randomizer $randomizer;
-
-    public function __construct()
-    {
-        $this->randomizer = new Randomizer;
-    }
-
-    public function generate(
+    public static function generate(
         int $length,
         bool $uppercaseLetters = false,
         bool $digits = false,
         bool $specialCharacters = false
     ): string
     {
+        $randomizer = new Randomizer;
+
         // Alphabets
         $lowercaseLettersAlphabet = range('a', 'z');
         $uppercaseLettersAlphabet = range('A', 'Z');
@@ -30,7 +25,7 @@ class PasswordGenerator
         $passwordAlphabet = $lowercaseLettersAlphabet;
 
         # Start by adding a lowercase letter
-        $password = $this->randomItemFromAlphabet($lowercaseLettersAlphabet);
+        $password = self::randomItemFromAlphabet($lowercaseLettersAlphabet, $randomizer);
 
         # We make sure that the final password contains at least
         # one {uppercase letter and/or digit and/or special character}
@@ -40,32 +35,32 @@ class PasswordGenerator
 
         if ($uppercaseLetters) {
             $passwordAlphabet = array_merge($passwordAlphabet, $uppercaseLettersAlphabet);
-            $password .= $this->randomItemFromAlphabet($uppercaseLettersAlphabet);
+            $password .= self::randomItemFromAlphabet($uppercaseLettersAlphabet, $randomizer);
         }
         
         if ($digits) {
             $passwordAlphabet = array_merge($passwordAlphabet, $digitsAlphabet);
-            $password .= $this->randomItemFromAlphabet($digitsAlphabet);
+            $password .= self::randomItemFromAlphabet($digitsAlphabet, $randomizer);
         }
 
         if ($specialCharacters) {
             $passwordAlphabet = array_merge($passwordAlphabet, $specialCharactersAlphabet);
-            $password .= $this->randomItemFromAlphabet($specialCharactersAlphabet);
+            $password .= self::randomItemFromAlphabet($specialCharactersAlphabet, $randomizer);
         }
 
         $numberOfCharactersRemaining = $length - mb_strlen($password);
 
         for ($i = 0; $i < $numberOfCharactersRemaining; $i++) {
-            $password .= $this->randomItemFromAlphabet($passwordAlphabet);
+            $password .= self::randomItemFromAlphabet($passwordAlphabet, $randomizer);
         }
         
         # We do a shuffle at the end to make the order 
         # of the final password characters unpredictable
-        return $this->randomizer->shuffleBytes($password);
+        return $randomizer->shuffleBytes($password);
     }
 
-    private function randomItemFromAlphabet(array $alphabet): string
+    private static function randomItemFromAlphabet(array $alphabet, Randomizer $randomizer): string
     {
-        return $alphabet[$this->randomizer->getInt(0, count($alphabet) - 1)];
+        return $alphabet[$randomizer->getInt(0, count($alphabet) - 1)];
     }
 }
