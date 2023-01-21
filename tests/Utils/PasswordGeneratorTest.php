@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Tests\Service;
+namespace App\Tests\Utils;
 
 use PHPUnit\Framework\TestCase;
 use App\Utils\PasswordGenerator;
