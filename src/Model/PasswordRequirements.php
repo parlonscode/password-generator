@@ -7,7 +7,7 @@ use Symfony\Component\Validator\Constraints as Assert;
 class PasswordRequirements
 {
     #[Assert\NotBlank]
-    private int $length;
+    private ?int $length;
     
     #[Assert\Type('bool')]
     private bool $uppercaseLetters;
@@ -18,12 +18,12 @@ class PasswordRequirements
     #[Assert\Type('bool')]
     private bool $specialCharacters;
 
-    public function getLength(): int
+    public function getLength(): ?int
     {
         return $this->length;
     }
 
-    public function setLength(int $length): self
+    public function setLength(?int $length): self
     {
         $this->length = $length;
 
