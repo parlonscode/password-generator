@@ -19,7 +19,7 @@ class PasswordsControllerTest extends WebTestCase
     }
 
     /** @test */
-    public function generated_password_page_should_redirect_to_home_if_requirements_is_missing_in_session(): void
+    public function generated_password_page_should_redirect_to_home_if_requirements_is_missing_from_session(): void
     {
         $client = static::createClient();
 
