@@ -7,7 +7,6 @@ use Symfony\Component\Validator\Constraints as Assert;
 class PasswordRequirements
 {
     #[Assert\NotBlank]
-    #[Assert\Range(min: 8, max: 60)]
     private int $length;
     
     #[Assert\Type('bool')]

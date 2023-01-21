@@ -4,7 +4,7 @@ namespace App\Tests\Controller;
 
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 
-class PagesControllerTest extends WebTestCase
+class PasswordsControllerTest extends WebTestCase
 {
     /** @test */
     public function homepage_is_displayed_successfully(): void
@@ -23,7 +23,7 @@ class PagesControllerTest extends WebTestCase
     {
         $client = static::createClient();
 
-        $client->request('GET', '/generate-password');
+        $client->request('POST', '/');
 
         $this->assertResponseIsSuccessful();
         $this->assertSelectorTextContains('h1', 'Wouhou 🎉');
@@ -48,7 +48,7 @@ class PagesControllerTest extends WebTestCase
     {
         $client = static::createClient();
 
-        $client->request('GET', '/generate-password');
+        $client->request('POST', '/');
         
         $this->assertBrowserHasCookie('app_length');
         $this->assertBrowserHasCookie('app_uppercase_letters');
@@ -63,9 +63,9 @@ class PagesControllerTest extends WebTestCase
 
         $client->request('GET', '/');
 
-        $crawler = $client->submitForm('Generate Password', [], 'GET');
+        $crawler = $client->submitForm('Generate Password', []);
 
-        $this->assertRouteSame('app_generate_password');
+        $this->assertRouteSame('app_passwords_show');
         $this->assertSame(12, mb_strlen($crawler->filter('.alert.alert-success > strong')->text()));
 
         $client->clickLink('« Go back to the homepage');
@@ -84,9 +84,9 @@ class PagesControllerTest extends WebTestCase
             'uppercase_letters' => false,
             'digits' => true,
             'special_characters' => true
-        ], 'GET');
+        ]);
 
-        $this->assertRouteSame('app_generate_password');
+        $this->assertRouteSame('app_passwords_show');
         $this->assertSame(
             15, mb_strlen($crawler->filter('.alert.alert-success > strong')->text())
         );
@@ -111,7 +111,7 @@ class PagesControllerTest extends WebTestCase
 
         $crawler = $client->request('GET', '/generate-password?length=2');
 
-        $this->assertRouteSame('app_generate_password');
+        $this->assertRouteSame('app_passwords_show');
         $this->assertSame(
             8, mb_strlen($crawler->filter('.alert.alert-success > strong')->text())
         );
@@ -124,7 +124,7 @@ class PagesControllerTest extends WebTestCase
 
         $crawler = $client->request('GET', '/generate-password?length=100');
 
-        $this->assertRouteSame('app_generate_password');
+        $this->assertRouteSame('app_passwords_show');
         $this->assertSame(
             60, mb_strlen($crawler->filter('.alert.alert-success > strong')->text())
         );
