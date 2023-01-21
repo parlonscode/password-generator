@@ -1,0 +1,29 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+    <div class="card shadow">
+        <div class="card-header">
+            <h1 class="h4 text-center mb-0 text-muted">
+                Password Generator
+            </h1>
+        </div>
+        <div class="card-body">
+            {{ form_start(form) }}
+                <div class="row">
+                    <div class="col-md-6 mb-3">
+                        {{ form_row(form.length) }}
+                    </div>
+                    <div class="col-md-6">
+                        {{ form_row(form.uppercaseLetters) }}
+                        {{ form_row(form.digits) }}
+                        {{ form_row(form.specialCharacters) }}
+                    </div>
+                </div>
+
+                <button type="submit" class="btn btn-primary w-100">
+                    Generate Password
+                </button>
+            {{ form_end(form) }}
+        </div>
+    </div>
+{% endblock %}
