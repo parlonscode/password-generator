@@ -9,13 +9,10 @@ class PasswordRequirements
     #[Assert\NotBlank]
     private ?int $length;
     
-    #[Assert\Type('bool')]
     private bool $uppercaseLetters;
     
-    #[Assert\Type('bool')]
     private bool $digits;
 
-    #[Assert\Type('bool')]
     private bool $specialCharacters;
 
     public function getLength(): ?int
