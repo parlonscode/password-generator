@@ -20,51 +20,52 @@ class PasswordGenerator
         bool $specialCharacters = false
     ): string
     {
-        // Define Alphabets
-        $lowercaseLettersAlphabet = 'abcdefghijklmnopqrstuvwxyz';
-        $uppercaseLettersAlphabet = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
-        $digitsAlphabet = '0123456789';
-        $specialCharactersAlphabet = '!"#$%&\'()*+,-./:;<=>?@[\\]^_`{|}~';
+        // Alphabets
+        $lowercaseLettersAlphabet = range('a', 'z');
+        $uppercaseLettersAlphabet = range('A', 'Z');
+        $digitsAlphabet = range(0, 9);
+        $specialCharactersAlphabet = str_split('!"#$%&\'()*+,-./:;<=>?@[\\]^_`{|}~');
 
-        # Final alphabet defaults to all lowercase letters alphabet
-        $alphabet = $lowercaseLettersAlphabet;
+        # Password alphabet defaults to all lowercase letters alphabet
+        $passwordAlphabet = $lowercaseLettersAlphabet;
 
         # Start by adding a lowercase letter
-        $password = $this->randomCharFromString($lowercaseLettersAlphabet);
+        $password = $this->randomItemFromAlphabet($lowercaseLettersAlphabet);
 
         # We make sure that the final password contains at least
         # one {uppercase letter and/or digit and/or special character}
         # based on user's requested constraints.
-        # We also grow at the same time the final alphabet with 
+        # We also grow at the same time the password alphabet with 
         # the alphabet of the requested constraint.
 
         if ($uppercaseLetters) {
-            $alphabet .= $uppercaseLettersAlphabet;
-            $password .= $this->randomCharFromString($uppercaseLettersAlphabet);
+            $passwordAlphabet = array_merge($passwordAlphabet, $uppercaseLettersAlphabet);
+            $password .= $this->randomItemFromAlphabet($uppercaseLettersAlphabet);
         }
         
         if ($digits) {
-            $alphabet .= $digitsAlphabet;
-            $password .= $this->randomCharFromString($digitsAlphabet);
+            $passwordAlphabet = array_merge($passwordAlphabet, $digitsAlphabet);
+            $password .= $this->randomItemFromAlphabet($digitsAlphabet);
         }
 
         if ($specialCharacters) {
-            $alphabet .= $specialCharactersAlphabet;
-            $password .= $this->randomCharFromString($specialCharactersAlphabet);
+            $passwordAlphabet = array_merge($passwordAlphabet, $specialCharactersAlphabet);
+            $password .= $this->randomItemFromAlphabet($specialCharactersAlphabet);
         }
 
         $numberOfCharactersRemaining = $length - mb_strlen($password);
 
         for ($i = 0; $i < $numberOfCharactersRemaining; $i++) {
-            $password .= $this->randomCharFromString($alphabet);
+            $password .= $this->randomItemFromAlphabet($passwordAlphabet);
         }
         
-        # We do a shuffle to make the password characters order unpredictable
+        # We do a shuffle at the end to make the order 
+        # of the final password characters unpredictable
         return $this->randomizer->shuffleBytes($password);
     }
 
-    private function randomCharFromString(string $str): string
+    private function randomItemFromAlphabet(array $alphabet): string
     {
-        return substr($this->randomizer->shuffleBytes($str), 0, 1);
+        return $alphabet[$this->randomizer->getInt(0, count($alphabet) - 1)];
     }
 }
