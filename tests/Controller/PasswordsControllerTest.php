@@ -78,6 +78,30 @@ class PasswordsControllerTest extends WebTestCase
     }
 
     /** @test */
+    public function should_generate_new_password_each_time_we_refresh(): void
+    {
+        $client = static::createClient();
+
+        $client->request('GET', '/');
+
+        $client->submitForm('Generate Password');
+
+        $crawler = $client->followRedirect();
+
+        $this->assertRouteSame('app_passwords_show');
+        
+        $password1 = $crawler->filter('.alert.alert-success > strong')->text();
+
+        $crawler = $client->request('GET', '/password-generated');
+
+        $password2 = $crawler->filter('.alert.alert-success > strong')->text();
+
+        $this->assertSame(12, mb_strlen($password1));
+        $this->assertSame(12, mb_strlen($password2));
+        $this->assertNotSame($password1, $password2);
+    }
+
+    /** @test */
     public function password_generation_form_with_values_should_work(): void
     {
         $client = static::createClient();
