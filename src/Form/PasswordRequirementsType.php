@@ -34,14 +34,14 @@ class PasswordRequirementsType extends AbstractType
                 ),
                 'choice_label' => fn ($value) => $value
             ])
-            ->add('uppercaseLetters', CheckboxType::class, [
+            ->add('uppercase_letters', CheckboxType::class, [
                 'label' => 'Uppercase Letters',
                 'required' => false
             ])
             ->add('digits', CheckboxType::class, [
                 'required' => false
             ])
-            ->add('specialCharacters', CheckboxType::class, [
+            ->add('special_characters', CheckboxType::class, [
                 'label' => 'Special Characters',
                 'required' => false
             ])
